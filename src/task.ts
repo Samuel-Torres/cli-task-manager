@@ -38,6 +38,30 @@ export function list(): void {
   }
 }
 
+export function complete(id: number): void {
+  const tasks = loadTasks();
+  const task = tasks.find((t) => t.id === id);
+  if (!task) {
+    console.error(`No task found with ID ${id}.`);
+    process.exit(1);
+  }
+  task.done = true;
+  saveTasks(tasks);
+  console.log(`Task #${id} marked as done: ${task.title}`);
+}
+
+export function deleteTask(id: number): void {
+  const tasks = loadTasks();
+  const index = tasks.findIndex((t) => t.id === id);
+  if (index === -1) {
+    console.error(`No task found with ID ${id}.`);
+    process.exit(1);
+  }
+  const [removed] = tasks.splice(index, 1);
+  saveTasks(tasks);
+  console.log(`Deleted task #${id}: ${removed.title}`);
+}
+
 export function add(title: string): void {
   const tasks = loadTasks();
   const id = tasks.length > 0 ? Math.max(...tasks.map((t) => t.id)) + 1 : 1;

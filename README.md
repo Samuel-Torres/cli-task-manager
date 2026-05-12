@@ -12,6 +12,17 @@ Tasks are persisted in tasks.json.
 - Install: npm install
 - Run: npx ts-node index.ts 
 - Build: npx tsc
+
+
+## Usage
+
+```bash
+npm run dev add "Buy milk"     # add a new task
+npm run dev list               # list all tasks
+npm run dev complete <id>      # mark a task as done
+npm run dev delete <id>        # delete a task
+```
+
 ## Conventions
 - Use TypeScript strict mode
 - Handle all errors gracefully with user-friendly messages

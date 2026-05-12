@@ -1,35 +1,42 @@
-import { add, list } from "./task";
+import { add, list, complete, deleteTask } from "./task";
 
 const [command, ...args] = process.argv.slice(2);
 
-function complete(args: string[]): void {
-  console.log("[complete] not yet implemented", args);
-}
-
-function deleteTask(args: string[]): void {
-  console.log("[delete] not yet implemented", args);
+function parseId(raw: string | undefined, cmd: string): number {
+  const id = parseInt(raw ?? "", 10);
+  if (isNaN(id)) {
+    console.error(`Usage: tasks ${cmd} <id>`);
+    process.exit(1);
+  }
+  return id;
 }
 
 function usage(): void {
   console.log(`Usage:
-  tasks add <title>
-  tasks list
-  tasks complete <id>
-  tasks delete <id>`);
+  npm run dev add <title>     # add a new task
+  npm run dev list            # list all tasks
+  npm run dev complete <id>   # mark a task as done
+  npm run dev delete <id>     # delete a task`);
 }
 
 switch (command) {
-  case "add":
-    add(args.join(" "));
+  case "add": {
+    const title = args.join(" ").trim();
+    if (!title) {
+      console.error("Usage: tasks add <title>");
+      process.exit(1);
+    }
+    add(title);
     break;
+  }
   case "list":
     list();
     break;
   case "complete":
-    complete(args);
+    complete(parseId(args[0], "complete"));
     break;
   case "delete":
-    deleteTask(args);
+    deleteTask(parseId(args[0], "delete"));
     break;
   default:
     usage();
