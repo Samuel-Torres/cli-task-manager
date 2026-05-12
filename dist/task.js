@@ -5,6 +5,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TASKS_FILE = void 0;
 exports.list = list;
+exports.complete = complete;
+exports.deleteTask = deleteTask;
 exports.add = add;
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
@@ -32,6 +34,28 @@ function list() {
         const status = task.done ? "done" : "pending";
         console.log(`${String(task.id).padEnd(2)}  ${task.title.padEnd(titleWidth)}  ${status}`);
     }
+}
+function complete(id) {
+    const tasks = loadTasks();
+    const task = tasks.find((t) => t.id === id);
+    if (!task) {
+        console.error(`No task found with ID ${id}.`);
+        process.exit(1);
+    }
+    task.done = true;
+    saveTasks(tasks);
+    console.log(`Task #${id} marked as done: ${task.title}`);
+}
+function deleteTask(id) {
+    const tasks = loadTasks();
+    const index = tasks.findIndex((t) => t.id === id);
+    if (index === -1) {
+        console.error(`No task found with ID ${id}.`);
+        process.exit(1);
+    }
+    const [removed] = tasks.splice(index, 1);
+    saveTasks(tasks);
+    console.log(`Deleted task #${id}: ${removed.title}`);
 }
 function add(title) {
     const tasks = loadTasks();
